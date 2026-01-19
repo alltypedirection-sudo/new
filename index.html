@@ -6,6 +6,45 @@
     <title>Solana Memecoin Launcher</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+
+<script>
+    let walletAddress = null;
+
+    async function connectWallet() {
+        // 1. Check if Phantom is installed
+        const isPhantomInstalled = window.solana && window.solana.isPhantom;
+
+        if (isPhantomInstalled) {
+            try {
+                // 2. Connect to wallet
+                const response = await window.solana.connect();
+                walletAddress = response.publicKey.toString();
+                
+                // 3. UI Update karein
+                const btn = document.getElementById('connectBtn');
+                btn.innerText = `Connected: ${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
+                btn.classList.replace('bg-yellow-500', 'bg-green-500');
+                
+                alert("Wallet Connected Successfully!");
+            } catch (err) {
+                console.error("Connection failed", err);
+                alert("Connection cancelled!");
+            }
+        } else {
+            // Agar Phantom nahi hai toh download link pe bhejien
+            alert("Phantom Wallet nahi mila! Please install kijiye.");
+            window.open("https://phantom.app/", "_blank");
+        }
+    }
+
+    // Button par function attach karna
+    document.addEventListener('DOMContentLoaded', () => {
+        const btn = document.querySelector('button'); // Aapka pehla button
+        btn.id = 'connectBtn';
+        btn.onclick = connectWallet;
+    });
+</script>
 <body class="bg-black text-yellow-400 font-mono">
 
     <header class="py-20 text-center border-b-2 border-yellow-500">
@@ -35,3 +74,4 @@
 
 </body>
 </html>
+
